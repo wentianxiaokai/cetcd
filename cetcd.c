@@ -393,7 +393,8 @@ static int cetcd_reap_watchers(cetcd_client *cli, CURLM *mcurl) {
                 curl_multi_remove_handle(mcurl, curl);
                 cetcd_watcher_reset(watcher);
 
-                if (watcher->index) {
+                if (index) {
+                // if (watcher->index) {
                     watcher->index = index + 1;
                     url = cetcd_watcher_build_url(cli, watcher);
                     curl_easy_setopt(watcher->curl, CURLOPT_URL, url);
@@ -418,6 +419,26 @@ int cetcd_multi_watch(cetcd_client *cli, cetcd_array *watchers) {
     cetcd_watcher *watcher;
     CURLM         *mcurl;
 
+
+// typedef enum {
+//   CURLM_CALL_MULTI_PERFORM = -1, /* please call curl_multi_perform() or
+//                                     curl_multi_socket*() soon */
+//   CURLM_OK,
+//   CURLM_BAD_HANDLE,      /* the passed-in handle is not a valid CURLM handle */
+//   CURLM_BAD_EASY_HANDLE, /* an easy handle was not good/valid */
+//   CURLM_OUT_OF_MEMORY,   /* if you ever get this, you're in deep sh*t */
+//   CURLM_INTERNAL_ERROR,   this is a libcurl bug 
+//   CURLM_BAD_SOCKET,      /* the passed in socket argument did not match */
+//   CURLM_UNKNOWN_OPTION,  /* curl_multi_setopt() with unsupported option */
+//   CURLM_ADDED_ALREADY,   /* an easy handle already added to a multi handle was
+//                             attempted to get added - again */
+//   CURLM_RECURSIVE_API_CALL, /* an api function was called from inside a
+//                                callback */
+//   CURLM_LAST
+// }
+    CURLMcode ret;
+
+
     struct timeval tv;
 
     mcurl = curl_multi_init();
@@ -430,7 +451,8 @@ int cetcd_multi_watch(cetcd_client *cli, cetcd_array *watchers) {
     backoff = 100; /*100ms*/
     backoff_max = 1000; /*1 sec*/
     for(;;) {
-        curl_multi_perform(mcurl, &left);
+        ret = curl_multi_perform(mcurl, &left);
+        // printf("\t\t ******  1111 ret : %d.\n", ret);
         if (left) {
             FD_ZERO(&r);
             FD_ZERO(&w);
@@ -448,7 +470,8 @@ int cetcd_multi_watch(cetcd_client *cli, cetcd_array *watchers) {
             /*TODO handle errors*/
             select(maxfd+1, &r, &w, &e, &tv);
 
-            curl_multi_perform(mcurl, &left);
+            ret = curl_multi_perform(mcurl, &left);
+            // printf("\t\t +++++  2222  ret : %d.\n", ret);
         }
         added = cetcd_reap_watchers(cli, mcurl);
         if (added == 0 && left == 0) {
@@ -483,13 +506,13 @@ static void *cetcd_multi_watch_wrapper(void *args[]) {
     cetcd_multi_watch(cli, watchers);
     return 0;
 }
-cetcd_watch_id cetcd_multi_watch_async(cetcd_client *cli, cetcd_array *watchers) {
-    pthread_t thread;
+cetcd_watch_id *cetcd_multi_watch_async(pthread_t *thread,cetcd_client *cli, cetcd_array *watchers) {
+    // pthread_t thread;
     void **args;
     args = calloc(2, sizeof(void *));
     args[0] = cli;
     args[1] = watchers;
-    pthread_create(&thread, NULL, (void *(*)(void *))cetcd_multi_watch_wrapper, args);
+    pthread_create(thread, NULL, (void *(*)(void *))cetcd_multi_watch_wrapper, args);
     return thread;
 }
 int cetcd_multi_watch_async_stop(cetcd_client *cli, cetcd_watch_id wid) {

@@ -1,4 +1,4 @@
-#include "../cetcd.h"
+#include "cetcd.h"
 
 int main(int argc, char *argv[]) {
     cetcd_client cli;
@@ -6,7 +6,7 @@ int main(int argc, char *argv[]) {
     cetcd_array addrs;
 
     cetcd_array_init(&addrs, 3);
-    cetcd_array_append(&addrs, "http://127.0.0.1:2379");
+    cetcd_array_append(&addrs, "http://172.253.33.14:2379");
 
     cetcd_client_init(&cli, &addrs);
 
