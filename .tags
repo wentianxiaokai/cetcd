@@ -385,7 +385,7 @@ cetcd_get	.\cetcd.c	/^cetcd_response *cetcd_get(cetcd_client *cli, const char *k
 cetcd_lsdir	.\cetcd.c	/^cetcd_response *cetcd_lsdir(cetcd_client *cli, const char *key, int sort, int recursive) {$/;"	f
 cetcd_mkdir	.\cetcd.c	/^cetcd_response *cetcd_mkdir(cetcd_client *cli, const char *key, uint64_t ttl){$/;"	f
 cetcd_multi_watch	.\cetcd.c	/^int cetcd_multi_watch(cetcd_client *cli, cetcd_array *watchers) {$/;"	f
-cetcd_multi_watch_async	.\cetcd.c	/^cetcd_watch_id cetcd_multi_watch_async(cetcd_client *cli, cetcd_array *watchers) {$/;"	f
+cetcd_multi_watch_async	.\cetcd.c	/^cetcd_watch_id *cetcd_multi_watch_async(pthread_t *thread,cetcd_client *cli, cetcd_array *watchers) {$/;"	f
 cetcd_multi_watch_async_stop	.\cetcd.c	/^int cetcd_multi_watch_async_stop(cetcd_client *cli, cetcd_watch_id wid) {$/;"	f
 cetcd_multi_watch_wrapper	.\cetcd.c	/^static void *cetcd_multi_watch_wrapper(void *args[]) {$/;"	f	file:
 cetcd_node_print	.\cetcd.c	/^static void cetcd_node_print(cetcd_response_node *node) {$/;"	f	file:

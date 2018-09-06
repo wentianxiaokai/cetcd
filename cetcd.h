@@ -183,7 +183,7 @@ int cetcd_del_watcher(cetcd_array *watchers, cetcd_watcher *watcher);
 /*cetcd_multi_watch setup all watchers and wait*/
 int cetcd_multi_watch(cetcd_client *cli, cetcd_array *watchers);
 /*cetcd_multi_watch setup all watchers in a seperate thread and return the watch id*/
-cetcd_watch_id *cetcd_multi_watch_async(pthread_t *thread,cetcd_client *cli, cetcd_array *watchers);
+cetcd_watch_id cetcd_multi_watch_async(cetcd_client *cli, cetcd_array *watchers);
 /*cetcd_multi_watch stop the watching thread with the watch id*/
 int cetcd_multi_watch_async_stop(cetcd_client *cli, cetcd_watch_id wid);
 /*cetcd_stop_watcher stop a watcher which has been setup*/

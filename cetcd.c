@@ -506,8 +506,8 @@ static void *cetcd_multi_watch_wrapper(void *args[]) {
     cetcd_multi_watch(cli, watchers);
     return 0;
 }
-cetcd_watch_id *cetcd_multi_watch_async(pthread_t *thread,cetcd_client *cli, cetcd_array *watchers) {
-    // pthread_t thread;
+cetcd_watch_id cetcd_multi_watch_async(cetcd_client *cli, cetcd_array *watchers) {
+    pthread_t thread;
     void **args;
     args = calloc(2, sizeof(void *));
     args[0] = cli;
